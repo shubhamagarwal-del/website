@@ -1368,8 +1368,12 @@
         onScreenVideos.add(video);
         if (!video.src && video.dataset.src) {
           video.src = video.dataset.src;
+          // preload="none" means assigning src alone fetches nothing. Without an
+          // explicit load() the clip waits on play() succeeding, and if play() is
+          // refused the panel silently stays on its poster forever.
+          video.load();
         }
-        video.play().catch(() => {}); // autoplay may still be refused; poster stays up
+        video.play().catch(() => {}); // refusal is fine; the poster covers it
       });
     }, { rootMargin: '2500px' });
 
