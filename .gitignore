@@ -1,0 +1,7 @@
+.DS_Store
+node_modules/
+.netlify/
+*.log
+_originals/
+index.html.backup
+index.html.bak-*

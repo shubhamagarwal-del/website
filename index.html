@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BLOOM — Rose to Website | Luxury Beauty & Cinematic Experience</title>
+  <meta name="description" content="A cinematic, luxury scroll web application revealing the transformation of a blooming rose into a couture lipstick." />
+
+  <!-- Preload the frames that gate startup, so they begin with the HTML
+       instead of waiting for the blocking vendor scripts below. -->
+  <link rel="preload" as="image" href="frames/frame_0001.webp">
+  <link rel="preload" as="image" href="frames/frame_0002.webp">
+  <link rel="preload" as="image" href="frames/frame_0003.webp">
+  <link rel="preload" as="image" href="frames/frame_0004.webp">
+  <link rel="preload" as="image" href="frames/frame_0005.webp">
+  <link rel="preload" as="image" href="frames/frame_0006.webp">
+  <link rel="preload" as="image" href="frames/frame_0007.webp">
+  <link rel="preload" as="image" href="frames/frame_0008.webp">
+  <link rel="preload" as="image" href="frames/frame_0009.webp">
+  <link rel="preload" as="image" href="frames/frame_0010.webp">
+  <link rel="preload" as="image" href="frames/frame_0011.webp">
+  <link rel="preload" as="image" href="frames/frame_0012.webp">
+
+  <!-- Fonts -->
+  <link rel="stylesheet" href="vendor/fonts.css">
+
+  <!-- Lenis CSS -->
+  <link rel="stylesheet" href="vendor/lenis.css" />
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & BASE STYLES
+       ========================================================================== */
+    :root {
+      --bg-dark: #0a0506;
+      --bg-gradient: radial-gradient(circle at 50% 30%, #1c0810 0%, #0a0506 75%);
+      --text-main: #f5ece6;
+      --text-muted: rgba(245, 236, 230, 0.65);
+      --accent-gold: #c9a675;
+      --accent-gold-glow: rgba(201, 166, 117, 0.35);
+      --accent-rose: #7a1128;
+      --font-display: 'Fraunces', serif;
+      --font-body: 'Inter', sans-serif;
+      --glass-bg: rgba(25, 12, 16, 0.6);
+      --glass-border: rgba(201, 166, 117, 0.18);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: auto;
+      background-color: var(--bg-dark);
+      background-image: var(--bg-gradient);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: clip; /* CRITICAL: prevents horizontal scroll without breaking sticky */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Selection styling */
+    ::selection {
+      background: var(--accent-rose);
+      color: var(--text-main);
+    }
+
+    /* Smooth anchor behavior */
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Scroll progress bar */
+    #scroll-progress-bar {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 2px;
+      height: 0vh;
+      background: var(--accent-gold);
+      box-shadow: 0 0 10px var(--accent-gold);
+      z-index: 999;
+      pointer-events: none;
+      transition: height 0.05s linear;
+    }
+
+    /* ==========================================================================
+       PRELOADER
+       ========================================================================== */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: #060304;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .preloader-brand {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-style: italic;
+      letter-spacing: 0.15em;
+      color: var(--text-main);
+      background: linear-gradient(135deg, #ffffff 0%, var(--accent-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .loader-bar-container {
+      width: 200px;
+      height: 2px;
+      background: rgba(245, 236, 230, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loader-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-gold);
+      box-shadow: 0 0 12px var(--accent-gold);
+      transition: width 0.1s ease-out;
+    }
+
+    .loader-status {
+      font-size: 0.75rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       NAVIGATION
+       ========================================================================== */
+    .header-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 2.2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(10,5,6,0.85) 0%, rgba(10,5,6,0) 100%);
+      pointer-events: auto;
+    }
+
+    .nav-logo {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 5px;
+      color: var(--text-main);
+      text-transform: uppercase;
+    }
+
+    .nav-cta {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 5px;
+      color: var(--text-main);
+      text-transform: uppercase;
+      padding: 0.7rem 1.8rem;
+      border: 1px solid rgba(245, 236, 230, 0.25);
+      border-radius: 40px;
+      background: rgba(245, 236, 230, 0.03);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent-gold);
+      color: #0a0506;
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 20px var(--accent-gold-glow);
+    }
+
+    /* ==========================================================================
+       SECTION 1: HERO CANVAS SCROLL
+       ========================================================================== */
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 450vh; /* Scroll distance for scrubbing */
+      background: var(--bg-dark);
+    }
+
+    .hero-sticky {
+      position: sticky;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-overlay-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    .overlay-title-bloom {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-style: italic;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      text-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    }
+
+    .overlay-subtitle {
+      font-family: var(--font-body);
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-main);
+      letter-spacing: 0.05em;
+    }
+
+    .overlay-heading {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 400;
+      color: var(--text-main);
+      text-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .overlay-tagline {
+      position: absolute;
+      top: 12vh;
+      left: 8vw;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--text-main);
+      text-align: left;
+    }
+
+    /* ==========================================================================
+       SECTION 2: STICKY EXPLAINER (BLOOM TO BULLET)
+       ========================================================================== */
+    .explainer-section {
+      position: relative;
+      width: 100%;
+      display: flex;
+      background: #0a0506;
+    }
+
+    .explainer-left {
+      width: 50%;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow: hidden;
+      border-right: 1px solid rgba(245, 236, 230, 0.08);
+    }
+
+    .explainer-img-stack {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .explainer-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      scale: 1.05;
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), scale 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .explainer-img.active {
+      opacity: 1;
+      scale: 1;
+    }
+
+    .explainer-right {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .explainer-panel {
+      min-height: 100vh;
+      padding: 6rem 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-bottom: 1px solid rgba(245, 236, 230, 0.05);
+    }
+
+    .panel-num {
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      color: var(--text-main);
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .panel-desc {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 480px;
+      line-height: 1.8;
+    }
+
+    /* ==========================================================================
+       SECTION 3: HORIZONTAL CRAFTSMANSHIP RAIL
+       ========================================================================== */
+    .horizontal-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background: #080304;
+    }
+
+    .horizontal-track {
+      display: flex;
+      width: 400vw;
+      height: 100%;
+      will-change: transform;
+    }
+
+    .craft-panel {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      flex-shrink: 0;
+      display: flex;
+      align-items: flex-end;
+      padding: 6rem 8vw;
+      overflow: hidden;
+    }
+
+    .craft-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.65) contrast(1.1);
+    }
+
+    .craft-card {
+      position: relative;
+      z-index: 10;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 3rem 3.5rem;
+      border-radius: 16px;
+      max-width: 540px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .craft-step {
+      font-size: 11px;
+      letter-spacing: 5px;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .craft-heading {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+    }
+
+    .craft-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* ==========================================================================
+       SECTION 4: PARALLAX STATEMENT
+       ========================================================================== */
+    .parallax-statement-section {
+      position: relative;
+      width: 100%;
+      height: 85vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .parallax-bg {
+      position: absolute;
+      top: -20%;
+      left: 0;
+      width: 100%;
+      height: 140%;
+      object-fit: cover;
+      filter: brightness(0.4) contrast(1.15);
+      will-change: transform;
+    }
+
+    .statement-content {
+      position: relative;
+      z-index: 10;
+      max-width: 950px;
+    }
+
+    .statement-quote {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.3;
+      color: var(--text-main);
+      text-shadow: 0 10px 40px rgba(0,0,0,0.9);
+      background: linear-gradient(180deg, #ffffff 0%, var(--text-main) 70%, var(--accent-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ==========================================================================
+       SECTION 5: REVERSE PARALLAX COLUMNS
+       ========================================================================== */
+    .columns-section {
+      padding: 10rem 6vw;
+      background: var(--bg-dark);
+    }
+
+    .section-header-centered {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 6rem auto;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      letter-spacing: 5px;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title-main {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.2;
+    }
+
+    .columns-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .column-card {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(20, 10, 14, 0.6);
+      border: 1px solid rgba(245, 236, 230, 0.08);
+      transition: transform 0.5s ease;
+    }
+
+    .column-card-img-wrap {
+      width: 100%;
+      height: 480px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .column-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s ease;
+    }
+
+    .column-card:hover .column-card-img {
+      transform: scale(1.06);
+    }
+
+    .column-card-body {
+      padding: 2.2rem 2rem;
+    }
+
+    .column-card-phase {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .column-card-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-style: italic;
+      margin-bottom: 0.8rem;
+    }
+
+    .column-card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       SECTION 6: FINAL LOOK GRID
+       ========================================================================== */
+    .grid-section {
+      padding: 6rem 6vw 10rem 6vw;
+      background: #080304;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+
+    .look-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .look-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      border-color: rgba(201, 166, 117, 0.4);
+    }
+
+    .look-card-img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+
+    .look-card-content {
+      padding: 2rem;
+    }
+
+    .look-card-tag {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .look-card-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .look-card-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       SECTION 7: EXTENDED SECTIONS (SHADE RANGE, RITUAL, THE CASE)
+       ========================================================================== */
+    .shades-section {
+      padding: 8rem 6vw;
+      background: var(--bg-dark);
+      text-align: center;
+    }
+
+    .shades-hero-img-wrap {
+      width: 100%;
+      max-width: 1200px;
+      margin: 4rem auto;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(201, 166, 117, 0.2);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+    }
+
+    .shades-hero-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .swatches-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 3rem auto 0 auto;
+    }
+
+    .swatch-card {
+      background: rgba(20, 10, 15, 0.5);
+      border: 1px solid rgba(245, 236, 230, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
+
+    .swatch-card:hover {
+      border-color: var(--accent-gold);
+    }
+
+    .swatch-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .swatch-name {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-main);
+    }
+
+    /* Ritual Section */
+    .ritual-section {
+      padding: 8rem 6vw;
+      background: #070304;
+    }
+
+    .ritual-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      margin-top: 5rem;
+    }
+
+    .ritual-item {
+      position: relative;
+    }
+
+    .ritual-img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 1.5rem;
+      filter: brightness(0.9);
+    }
+
+    .ritual-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+
+    .ritual-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Case & Packaging Section */
+    .case-section {
+      padding: 8rem 6vw;
+      background: var(--bg-dark);
+    }
+
+    .case-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      max-width: 1100px;
+      margin: 4rem auto 0 auto;
+      align-items: center;
+    }
+
+    .case-card-img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid rgba(245, 236, 230, 0.1);
+    }
+
+    .case-info {
+      text-align: center;
+      max-width: 600px;
+      margin: 3rem auto 0 auto;
+    }
+
+    /* ==========================================================================
+       SECTION 8: NEWSLETTER SECTION
+       ========================================================================== */
+    .newsletter-section {
+      position: relative;
+      padding: 10rem 2rem;
+      background: #060203;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .newsletter-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.25) contrast(1.2);
+    }
+
+    .newsletter-card {
+      position: relative;
+      z-index: 10;
+      max-width: 650px;
+      width: 100%;
+      text-align: center;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 4rem 3rem;
+      border-radius: 24px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.8);
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(245, 236, 230, 0.2);
+      border-radius: 40px;
+      padding: 1.1rem 1.8rem;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--accent-gold);
+    }
+
+    .newsletter-btn {
+      background: var(--accent-gold);
+      color: #0a0506;
+      border: none;
+      border-radius: 40px;
+      padding: 1.1rem 2.2rem;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .newsletter-btn:hover {
+      background: #e3bd8b;
+      box-shadow: 0 0 25px var(--accent-gold-glow);
+    }
+
+    /* ==========================================================================
+       SECTION 9: FOOTER
+       ========================================================================== */
+    .site-footer {
+      padding: 5rem 6vw 3rem 6vw;
+      background: #040203;
+      border-top: 1px solid rgba(245, 236, 230, 0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-style: italic;
+      letter-spacing: 0.1em;
+      color: var(--text-main);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 3rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-gold);
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: rgba(245, 236, 230, 0.35);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .header-nav { padding: 1.5rem 2rem; }
+      .explainer-section { flex-direction: column; }
+      .explainer-left { width: 100%; height: 50vh; }
+      .explainer-right { width: 100%; }
+      .columns-grid, .cards-grid, .swatches-row, .ritual-grid, .case-split {
+        grid-template-columns: 1fr;
+      }
+      .newsletter-form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll Progress Bar -->
+  <div id="scroll-progress-bar"></div>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-brand">BLOOM</div>
+    <div class="loader-bar-container">
+      <div class="loader-bar" id="loader-bar"></div>
+    </div>
+    <div class="loader-status" id="loader-status">INITIALIZING 0%</div>
+  </div>
+
+  <!-- Navigation Header -->
+  <header class="header-nav">
+    <a href="#" class="nav-logo">BLOOM</a>
+    <a href="#newsletter" class="nav-cta">SHOP NOW</a>
+  </header>
+
+  <main>
+    <!-- SECTION 1: HERO CANVAS SCROLL -->
+    <section class="hero-section" id="hero">
+      <div class="hero-sticky">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-overlay-container">
+          <div class="hero-overlay" id="overlay-1">
+            <h1 class="overlay-title-bloom">BLOOM</h1>
+          </div>
+          <div class="hero-overlay" id="overlay-2">
+            <p class="overlay-subtitle">A rose, reimagined.</p>
+          </div>
+          <div class="hero-overlay" id="overlay-3">
+            <h2 class="overlay-heading">Petals become pigment.</h2>
+          </div>
+          <div class="hero-overlay" id="overlay-4">
+            <h2 class="overlay-heading">Pigment becomes couture.</h2>
+          </div>
+          <div class="hero-overlay overlay-tagline" id="overlay-5">
+            ONE SHADE. EVERY BLOOM.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: STICKY EXPLAINER -->
+    <section class="explainer-section" id="explainer">
+      <div class="explainer-left">
+        <div class="explainer-img-stack">
+          <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-01-rose-small-bud.webp" alt="The Bloom" class="explainer-img active" id="exp-img-1" />
+          <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-05-rose-full-bloom.webp" alt="The Release" class="explainer-img" id="exp-img-2" />
+          <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-07-pigment-mold.webp" alt="The Form" class="explainer-img" id="exp-img-3" />
+          <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-08-finished-standing.webp" alt="The Finish" class="explainer-img" id="exp-img-4" />
+        </div>
+      </div>
+      <div class="explainer-right">
+        <div class="explainer-panel" data-index="0">
+          <span class="panel-num">01 / GENESIS</span>
+          <h2 class="panel-title">THE BLOOM</h2>
+          <p class="panel-desc">A single rose, grown for one purpose. Harvested under exact atmospheric conditions, every petal holds natural botanical vibrancy at its peak state.</p>
+        </div>
+        <div class="explainer-panel" data-index="1">
+          <span class="panel-num">02 / TRANSFORMATION</span>
+          <h2 class="panel-title">THE RELEASE</h2>
+          <p class="panel-desc">Petals fall and dissolve into liquid pigment. A delicate extraction process transforms organic velvet into rich, high-chroma dye without loss of purity.</p>
+        </div>
+        <div class="explainer-panel" data-index="2">
+          <span class="panel-num">03 / MANUFACTURE</span>
+          <h2 class="panel-title">THE FORM</h2>
+          <p class="panel-desc">Pigment sets into a precise matte bullet. Poured into polished chrome molds, the formula cools into an architectural cosmetic silhouette.</p>
+        </div>
+        <div class="explainer-panel" data-index="3">
+          <span class="panel-num">04 / APPLICATION</span>
+          <h2 class="panel-title">THE FINISH</h2>
+          <p class="panel-desc">One continuous motion from pickup to application. Delivers weightless silk coverage that fuses with lips for all-day comfort.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: HORIZONTAL CRAFTSMANSHIP RAIL -->
+    <section class="horizontal-section" id="craft-rail">
+      <div class="horizontal-track" id="craft-track">
+        
+        <div class="craft-panel">
+          <video class="craft-video" muted loop playsinline preload="none" poster="posters/v03-petals-release.webp" data-src="videos/lipstick-v03-petals-release.mp4"></video>
+          <div class="craft-card">
+            <span class="craft-step">01 / PETAL DISPERSION</span>
+            <h3 class="craft-heading">Velvet in Motion</h3>
+            <p class="craft-text">Harvested at peak bloom to capture volatile pigment compounds before they dissipate into atmosphere.</p>
+          </div>
+        </div>
+
+        <div class="craft-panel">
+          <video class="craft-video" muted loop playsinline preload="none" poster="posters/v04-pigment-forms.webp" data-src="videos/lipstick-v04-pigment-forms.mp4"></video>
+          <div class="craft-card">
+            <span class="craft-step">02 / MOLTEN CHROMATICITY</span>
+            <h3 class="craft-heading">Thermal Extraction</h3>
+            <p class="craft-text">Concentrated under gentle thermal agitation for zero color distortion and velvety micro-fluidity.</p>
+          </div>
+        </div>
+
+        <div class="craft-panel">
+          <video class="craft-video" muted loop playsinline preload="none" poster="posters/v05-lipstick-sets.webp" data-src="videos/lipstick-v05-lipstick-sets.mp4"></video>
+          <div class="craft-card">
+            <span class="craft-step">03 / PRECISION CASTING</span>
+            <h3 class="craft-heading">Architectural Form</h3>
+            <p class="craft-text">Cold-molded into an uncompromising bullet silhouette engineered for flawless single-swipe coverage.</p>
+          </div>
+        </div>
+
+        <div class="craft-panel">
+          <video class="craft-video" muted loop playsinline preload="none" poster="posters/v06-hand-picks-up.webp" data-src="videos/lipstick-v06-hand-picks-up.mp4"></video>
+          <div class="craft-card">
+            <span class="craft-step">04 / UNCOMPROMISING FINISH</span>
+            <h3 class="craft-heading">The Tactile Moment</h3>
+            <p class="craft-text">Formulated to feel like weightless silk upon skin while imparting rich pigment pay-off.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 4: PARALLAX STATEMENT -->
+    <section class="parallax-statement-section" id="statement">
+      <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-08-finished-standing.webp" alt="Bloom Bullet" class="parallax-bg" id="statement-bg" />
+      <div class="statement-content">
+        <blockquote class="statement-quote">
+          “Born from the velvet of a single rose, forged into a bullet of pure pigment.”
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- SECTION 5: REVERSE PARALLAX COLUMNS -->
+    <section class="columns-section" id="columns">
+      <div class="section-header-centered">
+        <span class="section-eyebrow">CURATED PHASES</span>
+        <h2 class="section-title-main">The Alchemy of Color</h2>
+      </div>
+
+      <div class="columns-grid">
+        <div class="column-card col-up" id="col-1">
+          <div class="column-card-img-wrap">
+            <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-06-petals-falling.webp" alt="Petals Falling" class="column-card-img" />
+          </div>
+          <div class="column-card-body">
+            <span class="column-card-phase">PHASE 01</span>
+            <h3 class="column-card-title">Botanical Release</h3>
+            <p class="column-card-desc">Petals drift under air resistance, releasing concentrated dye into the formulation queue.</p>
+          </div>
+        </div>
+
+        <div class="column-card col-down" id="col-2">
+          <div class="column-card-img-wrap">
+            <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-07-pigment-mold.webp" alt="Pigment Mold" class="column-card-img" />
+          </div>
+          <div class="column-card-body">
+            <span class="column-card-phase">PHASE 02</span>
+            <h3 class="column-card-title">Chrome Setting</h3>
+            <p class="column-card-desc">Viscous liquid cools inside custom metallic chambers, setting into a clean matte bullet.</p>
+          </div>
+        </div>
+
+        <div class="column-card col-up" id="col-3">
+          <div class="column-card-img-wrap">
+            <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-09-hand-picking-up.webp" alt="Hand Pickup" class="column-card-img" />
+          </div>
+          <div class="column-card-body">
+            <span class="column-card-phase">PHASE 03</span>
+            <h3 class="column-card-title">Application Artistry</h3>
+            <p class="column-card-desc">Crafted for tactile weight and effortless precision upon touch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: FINAL LOOK GRID -->
+    <section class="grid-section" id="grid">
+      <div class="section-header-centered">
+        <span class="section-eyebrow">COUTURE DETAILS</span>
+        <h2 class="section-title-main">The Final Manifestation</h2>
+      </div>
+
+      <div class="cards-grid">
+        <div class="look-card">
+          <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-08-finished-standing.webp" alt="The Bullet" class="look-card-img" />
+          <div class="look-card-content">
+            <span class="look-card-tag">SPECIFICATION</span>
+            <h3 class="look-card-title">THE BULLET</h3>
+            <p class="look-card-text">Sculpted with micro-fine pigment density for single-stroke opacity and soft matte comfort.</p>
+          </div>
+        </div>
+
+        <div class="look-card">
+          <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-09-hand-picking-up.webp" alt="The Pickup" class="look-card-img" />
+          <div class="look-card-content">
+            <span class="look-card-tag">ENGAGEMENT</span>
+            <h3 class="look-card-title">THE PICKUP</h3>
+            <p class="look-card-text">Balanced heavy-weight magnetic enclosure designed for sensory tactile satisfaction.</p>
+          </div>
+        </div>
+
+        <div class="look-card">
+          <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-10-woman-applying-front.webp" alt="The Finish" class="look-card-img" />
+          <div class="look-card-content">
+            <span class="look-card-tag">RESULT</span>
+            <h3 class="look-card-title">THE FINISH</h3>
+            <p class="look-card-text">Luminous velvet finish that adapts seamlessly to every skin tone and lighting environment.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: SHADE RANGE & EXTENDED SECTIONS -->
+    <section class="shades-section" id="shades">
+      <span class="section-eyebrow">SPECTRUM OF BLOOM</span>
+      <h2 class="section-title-main">One Shade. Every Bloom.</h2>
+
+      <div class="shades-hero-img-wrap">
+        <img loading="lazy" decoding="async" width="1800" height="1013" src="images/lipstick-17-shade-lineup.webp" alt="Shade Lineup" class="shades-hero-img" />
+      </div>
+
+      <div class="swatches-row">
+        <div class="swatch-card">
+          <img loading="lazy" decoding="async" width="1800" height="1013" src="images/lipstick-18-swatch-classic-red.webp" alt="Classic Red" class="swatch-img" />
+          <span class="swatch-name">Classic Crimson</span>
+        </div>
+        <div class="swatch-card">
+          <img loading="lazy" decoding="async" width="1800" height="1013" src="images/lipstick-19-swatch-rose-nude.webp" alt="Rose Nude" class="swatch-img" />
+          <span class="swatch-name">Velvet Nude</span>
+        </div>
+        <div class="swatch-card">
+          <img loading="lazy" decoding="async" width="1800" height="1013" src="images/lipstick-20-swatch-berry-plum.webp" alt="Berry Plum" class="swatch-img" />
+          <span class="swatch-name">Midnight Berry</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Ritual Section -->
+    <section class="ritual-section" id="ritual">
+      <div class="section-header-centered">
+        <span class="section-eyebrow">THE EXPERIENCE</span>
+        <h2 class="section-title-main">The Ritual of Application</h2>
+      </div>
+
+      <div class="ritual-grid">
+        <div class="ritual-item">
+          <img loading="lazy" decoding="async" width="1800" height="1013" src="images/lipstick-24-model-two-applying.webp" alt="Model Two Applying" class="ritual-img" />
+          <h3 class="ritual-title">Morning Focus</h3>
+          <p class="ritual-desc">An intentional swipe to define the day with vivid crimson clarity.</p>
+        </div>
+        <div class="ritual-item">
+          <img loading="lazy" decoding="async" width="1800" height="1013" src="images/lipstick-26-vanity-mirror-scene.webp" alt="Vanity Mirror Scene" class="ritual-img" />
+          <h3 class="ritual-title">Refinement at Dusk</h3>
+          <p class="ritual-desc">Reflected under warm ambient vanity light before evening occasions.</p>
+        </div>
+        <div class="ritual-item">
+          <img loading="lazy" decoding="async" width="1800" height="1013" src="images/lipstick-27-clutch-lifestyle.webp" alt="Clutch Lifestyle" class="ritual-img" />
+          <h3 class="ritual-title">Sensory Object</h3>
+          <p class="ritual-desc">An architectural piece carried as an essential evening companion.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- The Case Section -->
+    <section class="case-section" id="case">
+      <div class="section-header-centered">
+        <span class="section-eyebrow">COUTURE CASE</span>
+        <h2 class="section-title-main">The Unboxing Experience</h2>
+      </div>
+
+      <div class="case-split">
+        <img loading="lazy" decoding="async" width="1800" height="1013" src="images/lipstick-21-tube-capped-standing.webp" alt="Capped Tube" class="case-card-img" />
+        <img loading="lazy" decoding="async" width="1800" height="1013" src="images/lipstick-22-packaging-box-ribbon.webp" alt="Packaging Box" class="case-card-img" />
+      </div>
+
+      <div class="case-info">
+        <p class="panel-desc" style="margin: 0 auto;">Housed in weighted obsidian lacquer with custom gold logo engraving, wrapped in velvet ribbon for an unboxing moment of pure indulgence.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 8: NEWSLETTER SECTION -->
+    <section class="newsletter-section" id="newsletter">
+      <img loading="lazy" decoding="async" width="1800" height="1005" src="images/lipstick-10-woman-applying-front.webp" alt="Newsletter Background" class="newsletter-bg" />
+      <div class="newsletter-card">
+        <span class="section-eyebrow">EXCLUSIVE ACCESS</span>
+        <h2 class="section-title-main" style="margin-top:0.5rem;">Be First to Experience BLOOM.</h2>
+        <p class="panel-desc" style="margin: 1rem auto 0 auto;">Subscribe for priority access to our limited initial botanical harvest batch.</p>
+        
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to BLOOM.');">
+          <input type="email" class="newsletter-input" placeholder="Enter your email address" required />
+          <button type="submit" class="newsletter-btn">REQUEST ACCESS</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- SECTION 9: FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-logo">BLOOM</div>
+    <ul class="footer-links">
+      <li><a href="#hero">Hero</a></li>
+      <li><a href="#explainer">The Story</a></li>
+      <li><a href="#craft-rail">Craftsmanship</a></li>
+      <li><a href="#shades">Shade Range</a></li>
+      <li><a href="#newsletter">Access</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2026 BLOOM Beauty Atelier. All rights reserved. Created with Google Antigravity.</p>
+  </footer>
+
+  <!-- ==========================================================================
+       SCRIPTS: GSAP + SCROLLTRIGGER + LENIS + FRAME SCRUBBING
+       ========================================================================== -->
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
+
+  <script>
+    // Register GSAP Plugin
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initializing Lenis Smooth Scroll
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      smoothWheel: true,
+      autoRaf: false
+    });
+
+    // Synchronize Lenis with GSAP Ticker
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    // Sync ScrollTrigger updates with Lenis
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.lagSmoothing(0);
+
+    // ==========================================================================
+    // FRAME PRELOADER & HERO CANVAS SCRUBBING
+    // ==========================================================================
+    const TOTAL_FRAMES = 125;
+    const frames = [];
+    let loadedFramesCount = 0;
+
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+
+    const loaderBar = document.getElementById('loader-bar');
+    const loaderStatus = document.getElementById('loader-status');
+    const preloader = document.getElementById('preloader');
+    const progressBar = document.getElementById('scroll-progress-bar');
+
+    // Resize canvas resolution to match display size
+    function resizeCanvas() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      // A backgrounded or not-yet-laid-out viewport reports 0. Writing that would size the
+      // canvas to 0x0 and blank the hero with no event to recover from — so skip it and
+      // let the ResizeObserver below fire once real dimensions exist.
+      if (!w || !h) return;
+
+      canvas.width = w * window.devicePixelRatio;
+      canvas.height = h * window.devicePixelRatio;
+      renderFrame(currentFrameIndex);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Catches the cases a resize event does not: first layout, tab restored from
+    // background, mobile browser chrome collapsing.
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(resizeCanvas).observe(canvas);
+    }
+
+    let currentFrameIndex = 0;
+
+    function isReady(img) {
+      return img && img.complete && img.naturalWidth > 0;
+    }
+
+    function renderFrame(index) {
+      currentFrameIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, index));
+      let img = frames[currentFrameIndex];
+
+      // Frame not downloaded yet — fall back to the nearest earlier frame that is,
+      // so scrubbing ahead of the download never blanks the canvas.
+      if (!isReady(img)) {
+        for (let i = currentFrameIndex - 1; i >= 0; i--) {
+          if (isReady(frames[i])) { img = frames[i]; break; }
+        }
+      }
+      if (!isReady(img)) return;
+
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const iw = img.width;
+      const ih = img.height;
+
+      // Draw with object-fit: cover logic
+      const ratio = Math.max(cw / iw, ch / ih);
+      const nw = iw * ratio;
+      const nh = ih * ratio;
+      const cx = (cw - nw) / 2;
+      const cy = (ch - nh) / 2;
+
+      ctx.clearRect(0, 0, cw, ch);
+      ctx.drawImage(img, cx, cy, nw, nh);
+    }
+
+    // Preload frame images.
+    // The site starts once the opening frames are in — the rest keep arriving in the
+    // background. Scroll is slow at the top, so later frames land well before they're needed.
+    const START_AFTER = 12;
+    const START_TIMEOUT_MS = 5000;
+    let started = false;
+
+    function maybeStart() {
+      if (started) return;
+      started = true;
+      initHeroAndSite();
+    }
+
+    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+      const img = new Image();
+      const paddedNum = String(i).padStart(4, '0');
+      const frameIndex = i - 1;
+      // Opening frames gate the start, so let them win the bandwidth race.
+      img.fetchPriority = i <= START_AFTER ? 'high' : 'low';
+      img.src = `frames/frame_${paddedNum}.webp`;
+
+      const onSettled = () => {
+        loadedFramesCount++;
+
+        if (!started) {
+          const percent = Math.min(100, Math.round((loadedFramesCount / START_AFTER) * 100));
+          loaderBar.style.width = `${percent}%`;
+          loaderStatus.innerText = `INITIALIZING ${percent}%`;
+          if (loadedFramesCount >= START_AFTER) maybeStart();
+          return;
+        }
+
+        // Late arrival: the canvas may be showing an older fallback frame in its place.
+        if (frameIndex === currentFrameIndex) renderFrame(currentFrameIndex);
+      };
+
+      img.onload = onSettled;
+      img.onerror = onSettled; // a missing frame must not stall the start
+      frames.push(img);
+    }
+
+    // Never hold the site hostage to a slow network.
+    setTimeout(maybeStart, START_TIMEOUT_MS);
+
+    // ==========================================================================
+    // LAZY-LOAD CRAFT RAIL VIDEOS
+    // Posters render immediately; each clip is fetched only as its panel slides in,
+    // and pauses again once it leaves — so an unreached rail costs nothing.
+    // ==========================================================================
+    const onScreenVideos = new Set();
+
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+
+        if (!entry.isIntersecting) {
+          onScreenVideos.delete(video);
+          if (!video.paused) video.pause();
+          return;
+        }
+
+        onScreenVideos.add(video);
+        if (!video.src && video.dataset.src) {
+          video.src = video.dataset.src;
+        }
+        video.play().catch(() => {}); // autoplay may still be refused; poster stays up
+      });
+    }, { rootMargin: '300px' });
+
+    document.querySelectorAll('.craft-video').forEach((video) => videoObserver.observe(video));
+
+    // The browser pauses video in a backgrounded tab, and the observer won't fire again
+    // on return since the panel never stopped intersecting — so resume it by hand.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) return;
+      onScreenVideos.forEach((video) => video.play().catch(() => {}));
+    });
+
+    function initHeroAndSite() {
+      // Hide Preloader
+      preloader.style.opacity = '0';
+      setTimeout(() => {
+        preloader.style.visibility = 'hidden';
+      }, 800);
+
+      // Initial Canvas Render
+      resizeCanvas();
+
+      // ==========================================================================
+      // HERO GSAP ANIMATION
+      // ==========================================================================
+      const overlays = [
+        { id: 'overlay-1', start: 0.05, end: 0.15 },
+        { id: 'overlay-2', start: 0.20, end: 0.30 },
+        { id: 'overlay-3', start: 0.40, end: 0.50 },
+        { id: 'overlay-4', start: 0.60, end: 0.70 },
+        { id: 'overlay-5', start: 0.80, end: 0.90 }
+      ];
+
+      ScrollTrigger.create({
+        trigger: '#hero',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.3,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          
+          // 1. Scrub Canvas Frames
+          const frameIdx = Math.floor(progress * (TOTAL_FRAMES - 1));
+          renderFrame(frameIdx);
+
+          // 2. Animate Overlays
+          overlays.forEach(item => {
+            const el = document.getElementById(item.id);
+            if (!el) return;
+
+            if (progress >= item.start && progress <= item.end) {
+              const range = item.end - item.start;
+              const localProgress = (progress - item.start) / range;
+              
+              // Fade in during first 30%, hold middle, fade out last 30%
+              let opacity = 0;
+              if (localProgress < 0.3) {
+                opacity = localProgress / 0.3;
+              } else if (localProgress > 0.7) {
+                opacity = (1 - localProgress) / 0.3;
+              } else {
+                opacity = 1;
+              }
+
+              el.style.opacity = opacity;
+              el.style.transform = `translateY(${(1 - opacity) * 20}px)`;
+            } else {
+              el.style.opacity = 0;
+              el.style.transform = 'translateY(20px)';
+            }
+          });
+
+          // 3. Update Fixed Scroll Progress Bar Height
+          const winHeight = window.innerHeight;
+          const docHeight = document.documentElement.scrollHeight - winHeight;
+          const overallProgress = window.scrollY / docHeight;
+          progressBar.style.height = `${overallProgress * 100}vh`;
+        }
+      });
+
+      // Update progress bar on standard scroll as well
+      window.addEventListener('scroll', () => {
+        const winHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight - winHeight;
+        const overallProgress = Math.max(0, Math.min(1, window.scrollY / docHeight));
+        progressBar.style.height = `${overallProgress * 100}vh`;
+      });
+
+      // ==========================================================================
+      // SECTION 2: STICKY EXPLAINER IMAGE SWAPPING
+      // ==========================================================================
+      const explainerImages = [
+        document.getElementById('exp-img-1'),
+        document.getElementById('exp-img-2'),
+        document.getElementById('exp-img-3'),
+        document.getElementById('exp-img-4')
+      ];
+
+      const explainerPanels = document.querySelectorAll('.explainer-panel');
+
+      explainerPanels.forEach((panel, i) => {
+        ScrollTrigger.create({
+          trigger: panel,
+          start: 'top 60%',
+          end: 'bottom 40%',
+          onEnter: () => activateImage(i),
+          onEnterBack: () => activateImage(i)
+        });
+      });
+
+      function activateImage(index) {
+        explainerImages.forEach((img, idx) => {
+          if (idx === index) {
+            img.classList.add('active');
+          } else {
+            img.classList.remove('active');
+          }
+        });
+      }
+
+      // ==========================================================================
+      // SECTION 3: HORIZONTAL CRAFTSMANSHIP RAIL
+      // ==========================================================================
+      const craftTrack = document.getElementById('craft-track');
+
+      gsap.to(craftTrack, {
+        xPercent: -75, // Move 3 panels to the left (4 panels total)
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#craft-rail',
+          pin: true,
+          scrub: 1,
+          start: 'top top',
+          end: '+=3200'
+        }
+      });
+
+      // ==========================================================================
+      // SECTION 4: PARALLAX STATEMENT
+      // ==========================================================================
+      gsap.to('#statement-bg', {
+        yPercent: 20,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#statement',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+
+      // ==========================================================================
+      // SECTION 5: REVERSE PARALLAX COLUMNS
+      // ==========================================================================
+      gsap.to('#col-1, #col-3', {
+        yPercent: -15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#columns',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+
+      gsap.to('#col-2', {
+        yPercent: 15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#columns',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+
+      // Refresh ScrollTrigger to calculate exact heights
+      ScrollTrigger.refresh();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# Netlify headers
+#
+# RULE: everything cached below is cached by FILENAME for a year. If you ever
+# change an asset, give it a NEW filename (or a new folder like frames-v2/).
+# Overwriting a file in place will NOT reach anyone who has already visited.
+# The one exception is index.html, which is always revalidated — so a new HTML
+# pointing at new filenames is what actually ships an update.
+
+# HTML — never cache. This is what lets everything else be cached forever.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Hero frame sequence
+/frames/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Section imagery
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Craft rail clips and their posters
+/videos/*
+  Cache-Control: public, max-age=31536000, immutable
+/posters/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# GSAP, ScrollTrigger, Lenis — pinned versions, safe to freeze.
+# Font files carry Google's content hashes in their names, so they are
+# genuinely immutable: a different font build is a different filename.
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
