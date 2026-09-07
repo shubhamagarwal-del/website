@@ -1346,8 +1346,12 @@
 
     // ==========================================================================
     // LAZY-LOAD CRAFT RAIL VIDEOS
-    // Posters render immediately; each clip is fetched only as its panel slides in,
-    // and pauses again once it leaves — so an unreached rail costs nothing.
+    // Posters render immediately; each clip is fetched as its panel approaches, and
+    // pauses again once it leaves — so an unreached rail still costs nothing.
+    //
+    // The margin is deliberately large. A clip that only starts downloading as its
+    // panel slides into view cannot buffer in time, and the rail then plays as a
+    // slideshow of posters. Starting a section early is what makes it actually move.
     // ==========================================================================
     const onScreenVideos = new Set();
 
@@ -1367,7 +1371,7 @@
         }
         video.play().catch(() => {}); // autoplay may still be refused; poster stays up
       });
-    }, { rootMargin: '300px' });
+    }, { rootMargin: '2500px' });
 
     document.querySelectorAll('.craft-video').forEach((video) => videoObserver.observe(video));
 
